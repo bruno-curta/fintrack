@@ -1,0 +1,12 @@
+{
+    "https://api.shinyapps.io": {
+        "server_url": "https://api.shinyapps.io",
+        "filename": "/home/curta/Documents/fintrack",
+        "app_url": "https://curta-16-11-1982.shinyapps.io/fintrack/",
+        "app_id": 14312322,
+        "app_guid": null,
+        "title": "fintrack",
+        "app_mode": "python-shiny",
+        "app_store_version": 1
+    }
+}
