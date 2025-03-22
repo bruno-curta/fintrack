@@ -7,7 +7,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
 import pandas as pd
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import os
 
 from mongodb_connect import MongoDBConnect
@@ -38,7 +38,7 @@ app_ui = ui.page_fillable(
     ),
     ui.navset_card_tab(
         ui.nav_panel(ui.markdown('''
-                            <div style="color:green; text-align: center"><b>GASTOS</b></div>
+                            <div style="color:green; text-align: center"><b>FIN</b></div>
                             '''),
                           
                 ui.input_select('who', 'Quem pagou?', ['', 'Teste', 'Bruno', 'Ellen'], width='100%'),
@@ -52,16 +52,15 @@ app_ui = ui.page_fillable(
                 ui.input_action_button('submit', 'Enviar', width='100%'),
         ),
         ui.nav_panel(ui.markdown('''
-                            <div style="color:green; text-align: center"><b>GRÁFICOS</b></div>
+                            <div style="color:green; text-align: center"><b>TRACK</b></div>
                             '''),
-            ui.card(ui.input_action_button('update_chart', 'Atualizar Dados', width='100%'), max_height='80px'),
-            ui.output_plot('p')
-
-        ),
-        ui.nav_panel(ui.markdown('''
-                            <div style="color:green; text-align: center"><b>DADOS</b></div>
-                            '''),
-            ui.card(ui.input_action_button('update_data', 'Atualizar Dados', width='100%'), max_height='80px'),
+            ui.card(
+                ui.layout_columns(
+                ui.input_select('year', 'Ano', ['2025', '2026'], width='100%'),
+                ui.input_select('month', 'Mês', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], selected=pd.to_datetime('now').month, width='100%')
+                ),
+                max_height='100px'),
+            ui.card(ui.input_action_button('update_data', 'Mostrar Dados', width='100%'), max_height='80px'),
             ui.output_ui('df_update')
         )
     ),
@@ -138,47 +137,18 @@ def server(input: Inputs, output: Outputs, session: Session):
 
         df_track = df_track.merge(target, on='category', how='left').sort_values(by=['year', 'month', 'category'])
         df_track['track'] = round(df_track['value']/df_track['target']*100,1)
+
+        ano = int(input.year())
+        mes = int(input.month())
+        df_final = df_track.loc[(df_track['year']==ano) & (df_track['month']==mes), ['category', 'value', 'target', 'track']]
         
         def highlight_SLA(series):
-            green = 'background-color: lightgreen'
+            green = 'background-color: green'
             yellow = 'background-color: yellow'
-            pink = 'background-color: pink'
+            pink = 'background-color: red'
             return [green if value <= 95 else yellow if value <100 else pink for value in series]
-
-        def ontrack(v):
-            if v < .95:
-                return "Ok"
-            elif v < 1:
-                return "Atenção"
-            return "Estourou!"
-
-        def make_pretty(styler):
-            styler.set_caption("Tracking")
-            styler.format(ontrack)
-            styler.format_index(lambda v: v.strftime("%A"))
-            styler.background_gradient(axis=None, vmin=0, vmax=2, cmap="YlGnBu")
-            return styler
         
-        return ui.HTML(df_track.style.apply(highlight_SLA, subset=['track']).format('{:.2f}', na_rep='MISS', subset=['value', 'target', 'track']).to_html())
-
-    @output
-    @render.plot
-    @reactive.event(input.update_chart)
-    def p():
-        df=pd.DataFrame(client.get_data())
-        if df.empty:
-            return None
-        else:
-            fig, ax = plt.subplots(figsize=(10, 6))
-            y = df.loc[df.track_timestamp>=pd.to_datetime('now')-pd.tseries.offsets.DateOffset(months=2)].groupby(df.track_timestamp.dt.date)['value'].sum()
-            ax.bar(y.index, y, color='purple')
-            ax.set_title('Gasto Diário - últimos 2 meses')
-            ax.spines['top'].set_visible(False)
-            ax.spines['right'].set_visible(False)
-            ax.spines['bottom'].set_visible(False)
-            ax.spines['left'].set_visible(False)
-            return plt.gcf()
-    
+        return ui.HTML(df_final.style.apply(highlight_SLA, subset=['track']).format('{:.2f}', na_rep='MISS', subset=['value', 'target', 'track']).to_html(index=False))
 
 app = App(app_ui, server)
 
