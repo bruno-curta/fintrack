@@ -38,5 +38,9 @@ class MongoDBConnect:
         self.db['fintrack'].insert_one(data)
         print('Data inserted successfully!')
 
+    def delete_data(self, query: dict):
+        self.db['fintrack'].delete_many(query)
+        print('Data deleted successfully!')
+
     def close_connection(self):
         self.client.close()

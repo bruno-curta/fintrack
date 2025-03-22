@@ -11,6 +11,8 @@ import matplotlib.pyplot as plt
 import os
 
 from mongodb_connect import MongoDBConnect
+from track import targets
+
 
 client = MongoDBConnect()
 
@@ -28,10 +30,15 @@ categories = {
 }
 
 app_ui = ui.page_fillable(
-    ui.input_dark_mode(mode='dark'),
+    ui.layout_columns(
+            ui.input_dark_mode(mode='dark'),
+            ui.markdown('''<div style="color:green; text-align: left"><b>FINTRACK</b></div>'''),
+        max_height='30px',
+        col_widths=[1,11]
+    ),
     ui.navset_card_tab(
         ui.nav_panel(ui.markdown('''
-                            <div style="color:green; text-align: center"><b>FINTRACK &#129297;</b></div>
+                            <div style="color:green; text-align: center"><b>GASTOS</b></div>
                             '''),
                           
                 ui.input_select('who', 'Quem pagou?', ['', 'Teste', 'Bruno', 'Ellen'], width='100%'),
@@ -40,25 +47,24 @@ app_ui = ui.page_fillable(
                 ui.input_select('category', 'Categoria', list(categories.keys()), width='100%'),
                 ui.input_select('subcategory', 'Subcategoria', [], width='100%'),
                 ui.input_text('where', 'Onde foi?', placeholder='Local da compra', width='100%'),
-                ui.input_numeric('value', 'Valor Gasto', value='0.00', width='100%'),
+                ui.input_numeric('value', 'Valor Gasto', value='', width='100%'),
+                ui.markdown('''<br><br>'''),
                 ui.input_action_button('submit', 'Enviar', width='100%'),
-            
         ),
         ui.nav_panel(ui.markdown('''
-                            <div style="color:green; text-align: center"><b>GRÁFICOS &#128200;</b></div>
+                            <div style="color:green; text-align: center"><b>GRÁFICOS</b></div>
                             '''),
             ui.card(ui.input_action_button('update_chart', 'Atualizar Dados', width='100%'), max_height='80px'),
             ui.output_plot('p')
 
         ),
         ui.nav_panel(ui.markdown('''
-                            <div style="color:green; text-align: center"><b>DADOS &#128187;</b></div>
+                            <div style="color:green; text-align: center"><b>DADOS</b></div>
                             '''),
             ui.card(ui.input_action_button('update_data', 'Atualizar Dados', width='100%'), max_height='80px'),
-            ui.output_data_frame('df_update')
+            ui.output_ui('df_update')
         )
     ),
-    
 )
 
 def server(input: Inputs, output: Outputs, session: Session):
@@ -84,7 +90,7 @@ def server(input: Inputs, output: Outputs, session: Session):
         value = input.value()
 
         # condition to check if any input is empty and return a message for a modal warning
-        if who == '' or forwhom == '' or how == '' or category == '' or subcategory == '' or where == '' or value == 0.00:
+        if who == '' or forwhom == '' or how == '' or category == '' or subcategory == '' or where == '' or value == '':
             m = ui.modal('', 'Preencha todos os campos para enviar!')
             ui.modal_show(m)
         else:
@@ -103,7 +109,7 @@ def server(input: Inputs, output: Outputs, session: Session):
             client.insert_data(track)
 
             ui.update_text('where', value='')
-            ui.update_numeric('value', value='0.00')
+            ui.update_numeric('value', value='')
             ui.update_select('who', selected='')
             ui.update_select('forwhom', selected='')
             ui.update_select('how', selected='')
@@ -114,12 +120,46 @@ def server(input: Inputs, output: Outputs, session: Session):
             ui.modal_show(m)
 
     @output
-    @render.data_frame
+    @render.ui
     @reactive.event(input.update_data)
     
     def df_update():
         df=pd.DataFrame(client.get_data())
-        return render.DataGrid(df, filters=True, width='100%')
+        df['year'] = df['track_timestamp'].dt.year
+        df['month'] = df['track_timestamp'].dt.month
+        df['day'] = df['track_timestamp'].dt.day
+        target = targets()
+
+        df_totals = df.groupby(['year', 'month'])['value'].sum().reset_index()
+        df_totals['category'] = 'Total'
+
+        df_category = df.groupby(['year', 'month',  'category'])['value'].sum().reset_index()
+        df_track = pd.concat([df_category, df_totals], ignore_index=True)
+
+        df_track = df_track.merge(target, on='category', how='left').sort_values(by=['year', 'month', 'category'])
+        df_track['track'] = round(df_track['value']/df_track['target']*100,1)
+        
+        def highlight_SLA(series):
+            green = 'background-color: lightgreen'
+            yellow = 'background-color: yellow'
+            pink = 'background-color: pink'
+            return [green if value <= 95 else yellow if value <100 else pink for value in series]
+
+        def ontrack(v):
+            if v < .95:
+                return "Ok"
+            elif v < 1:
+                return "Atenção"
+            return "Estourou!"
+
+        def make_pretty(styler):
+            styler.set_caption("Tracking")
+            styler.format(ontrack)
+            styler.format_index(lambda v: v.strftime("%A"))
+            styler.background_gradient(axis=None, vmin=0, vmax=2, cmap="YlGnBu")
+            return styler
+        
+        return ui.HTML(df_track.style.apply(highlight_SLA, subset=['track']).format('{:.2f}', na_rep='MISS', subset=['value', 'target', 'track']).to_html())
 
     @output
     @render.plot
