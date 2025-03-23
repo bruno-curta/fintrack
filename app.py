@@ -31,14 +31,13 @@ categories = {
 
 app_ui = ui.page_fillable(
     ui.layout_columns(
-            ui.input_dark_mode(mode='dark'),
-            ui.markdown('''<div style="color:green; text-align: left"><b>FINTRACK</b></div>'''),
+            ui.markdown('''<div style="color:green; text-align: left"><b>FINTRACK APP</b></div>'''),
         max_height='30px',
         col_widths=[1,11]
     ),
     ui.navset_card_tab(
         ui.nav_panel(ui.markdown('''
-                            <div style="color:green; text-align: center"><b>FIN</b></div>
+                            <div style="color:green; text-align: center"><b>SUBMIT</b></div>
                             '''),
                           
                 ui.input_select('who', 'Quem pagou?', ['', 'Teste', 'Bruno', 'Ellen'], width='100%'),
@@ -56,10 +55,12 @@ app_ui = ui.page_fillable(
                             '''),
             ui.card(
                 ui.layout_columns(
-                ui.input_select('year', 'Ano', ['2025', '2026'], width='50%'),
-                ui.input_select('month', 'Mês', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], selected=pd.to_datetime('now').month, width='50%'),
-                col_widths=[2,2]),
-                max_height='15%'),
+                ui.input_select('year', 'Ano', ['2025', '2026'], width='40%'),
+                ui.input_select('month', 'Mês', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], selected=pd.to_datetime('now').month, width='40%'),
+                max_height='15%'
+                ),
+                max_height='15%'
+                ),
             ui.card(ui.input_action_button('update_data', 'Mostrar Dados', width='100%'), max_height='80px'),
             ui.output_ui('df_update')
         )
