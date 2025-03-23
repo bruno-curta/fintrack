@@ -53,16 +53,16 @@ app_ui = ui.page_fillable(
         ui.nav_panel(ui.markdown('''
                             <div style="color:green; text-align: center"><b>TRACK</b></div>
                             '''),
-            ui.page_fluid(
-                ui.row(
-                ui.column(4, ui.input_select('year', 'Ano', ['2025', '2026'])),
-                ui.column(2, ui.input_select('month', 'Mês', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], selected=pd.to_datetime('now').month), offset=1),
-                max_height='15%'
-                )
-                ),
-            ui.card(
+            ui.page_sidebar(
+                ui.sidebar('Selecione o ano e mês para visualizar os dados',
+                ui.input_select('year', 'Ano', ['2025', '2026']),
+                ui.input_select('month', 'Mês', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], selected=pd.to_datetime('now').month),
                 ui.input_action_button('update_data', 'Mostrar Dados', width='100%'), 
+                ),
+                ui.card(
                 ui.output_ui('df_update'),
+                max_height='100%',
+                ),
                 ),
         )
     ),
