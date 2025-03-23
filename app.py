@@ -29,7 +29,7 @@ categories = {
     'Outros': ['Outros']
 }
 
-app_ui = ui.page_fillable(
+app_ui = ui.page_fluid(
     ui.layout_columns(
             ui.input_dark_mode(mode='dark'),
             ui.markdown('''<div style="color:green; text-align: left"><b>FINTRACK</b></div>'''),
@@ -54,12 +54,10 @@ app_ui = ui.page_fillable(
         ui.nav_panel(ui.markdown('''
                             <div style="color:green; text-align: center"><b>TRACK</b></div>
                             '''),
-            ui.card(
-                ui.layout_columns(
-                ui.input_select('year', 'Ano', ['2025', '2026'], width='50%'),
-                ui.input_select('month', 'Mês', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], selected=pd.to_datetime('now').month, width='50%'),
-                col_widths=[2,2]),
-                max_height='20%'),
+            ui.layout_column_wrap(
+                ui.input_select('year', 'Ano', ['2025', '2026'], width='49%'),
+                ui.input_select('month', 'Mês', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], selected=pd.to_datetime('now').month, width='49%'),
+                height_mobile='20px'),
             ui.card(ui.input_action_button('update_data', 'Mostrar Dados', width='100%'), max_height='80px'),
             ui.output_ui('df_update')
         )
