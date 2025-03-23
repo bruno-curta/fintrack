@@ -53,8 +53,8 @@ app_ui = ui.page_fillable(
         ui.nav_panel(ui.markdown('''
                             <div style="color:green; text-align: center"><b>TRACK</b></div>
                             '''),
-            ui.card(
-                ui.layout_columns(
+            ui.page_fluid(
+                ui.row(
                 ui.input_select('year', 'Ano', ['2025', '2026'], width='40%'),
                 ui.input_select('month', 'Mês', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], selected=pd.to_datetime('now').month, width='40%'),
                 max_height='15%'
