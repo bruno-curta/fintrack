@@ -12,6 +12,7 @@ import os
 
 from mongodb_connect import MongoDBConnect
 from track import targets
+from openai_client import aiplaceholder
 
 
 client = MongoDBConnect()
@@ -65,7 +66,13 @@ app_ui = ui.page_fillable(
                 ),
                 fillable_mobile=True
                 ),
+        ),
+        ui.nav_panel(ui.markdown('''<div style="color:green; text-align: center"><b>AI</b></div>'''),
+            ui.card(ui.card_header("Converse com seus gastos"),
+                ui.chat_ui("chat", placeholder='Digite aqui sua pergunta', width='100%',fillable_mobile=True)
+            )
         )
+
     ),
     fillable_mobile=True
 )
@@ -153,6 +160,15 @@ def server(input: Inputs, output: Outputs, session: Session):
             return [green if value <= 95 else yellow if value <100 else pink for value in series]
         
         return ui.HTML(df_final.style.hide().apply(highlight_SLA, subset=['track']).format('{:.0f}', na_rep='MISS', subset=['value', 'target', 'track']).to_html(index=False))
+
+     # Define the chat
+    chat = ui.Chat(id="chat")
+
+    @chat.on_user_submit
+    async def _():
+        question = chat.user_input()
+        answer = aiplaceholder(question)
+        await chat.append_message(answer)
 
 app = App(app_ui, server)
 
