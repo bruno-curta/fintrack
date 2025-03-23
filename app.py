@@ -56,8 +56,8 @@ app_ui = ui.page_fillable(
                             '''),
             ui.card(
                 ui.layout_columns(
-                ui.input_select('year', 'Ano', ['2025', '2026'], width='50%'),
-                ui.input_select('month', 'Mês', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], selected=pd.to_datetime('now').month, width='50%')
+                ui.input_select('year', 'Ano', ['2025', '2026'], width='45%'),
+                ui.input_select('month', 'Mês', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], selected=pd.to_datetime('now').month, width='45%')
                 ),
                 max_height='100px'),
             ui.card(ui.input_action_button('update_data', 'Mostrar Dados', width='100%'), max_height='80px'),
@@ -148,7 +148,7 @@ def server(input: Inputs, output: Outputs, session: Session):
             pink = 'background-color: red'
             return [green if value <= 95 else yellow if value <100 else pink for value in series]
         
-        return ui.HTML(df_final.style.hide().apply(highlight_SLA, subset=['track']).format('{:.2f}', na_rep='MISS', subset=['value', 'target', 'track']).to_html(index=False))
+        return ui.HTML(df_final.style.hide().apply(highlight_SLA, subset=['track']).format('{:.0f}', na_rep='MISS', subset=['value', 'target', 'track']).to_html(index=False))
 
 app = App(app_ui, server)
 
