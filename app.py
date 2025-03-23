@@ -55,8 +55,8 @@ app_ui = ui.page_fillable(
                             '''),
             ui.page_fluid(
                 ui.row(
-                ui.input_select('year', 'Ano', ['2025', '2026'], width='40%'),
-                ui.input_select('month', 'Mês', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], selected=pd.to_datetime('now').month, width='40%'),
+                ui.column(4, ui.input_select('year', 'Ano', ['2025', '2026'], width='100%')),
+                ui.column(4, ui.input_select('month', 'Mês', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], selected=pd.to_datetime('now').month, width='100%')),
                 max_height='15%'
                 ),
                 max_height='15%'
