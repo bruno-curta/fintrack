@@ -63,6 +63,7 @@ app_ui = ui.page_fillable(
                 ui.output_ui('df_update'),
                 max_height='100%',
                 ),
+                fillable_mobile=True
                 ),
         )
     ),
