@@ -12,10 +12,11 @@ import os
 
 from mongodb_connect import MongoDBConnect
 from track import targets
-from openai_client import aiplaceholder
+from ai_client import ChatCompletion
 
 
 client = MongoDBConnect()
+ai_client = ChatCompletion()
 
 categories = {
     '': [],
@@ -166,8 +167,12 @@ def server(input: Inputs, output: Outputs, session: Session):
 
     @chat.on_user_submit
     async def _():
+        df=pd.DataFrame(client.get_data())
+        fintrack_md = df.to_markdown(index=False)
+        print(fintrack_md)
         question = chat.user_input()
-        answer = aiplaceholder(question)
+        prompt = f"Here is a financial table:\n{fintrack_md}\n\nBased on this, {question}"
+        answer = ai_client.chat(prompt)
         await chat.append_message(answer)
 
 app = App(app_ui, server)
