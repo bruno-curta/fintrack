@@ -32,11 +32,11 @@ categories = {
 }
 
 app_ui = ui.page_fillable(
-    ui.layout_columns(
-            ui.markdown('''<div style="color:green; text-align: left"><b>FINTRACK APP</b></div>'''),
-        max_height='30px',
-        col_widths=[1,11]
-    ),
+    #ui.layout_columns(
+    #        ui.markdown('''<div style="color:green; text-align: left"><b>FINTRACK APP</b></div>'''),
+    #    max_height='30px',
+    #    col_widths=[1,11]
+    #),
     ui.navset_card_tab(
         ui.nav_panel(ui.markdown('''
                             <div style="color:green; text-align: center"><b>SUBMIT</b></div>
@@ -49,8 +49,8 @@ app_ui = ui.page_fillable(
                 ui.input_select('subcategory', 'Subcategoria', [], width='100%'),
                 ui.input_text('where', 'Onde foi?', placeholder='Local da compra', width='100%'),
                 ui.input_numeric('value', 'Valor Gasto', value='', width='100%'),
-                ui.markdown('''<br><br>'''),
-                ui.input_action_button('submit', 'Enviar', width='100%'),
+                ui.card(
+                ui.input_action_button('submit', 'Enviar', width='100%')),
         ),
         ui.nav_panel(ui.markdown('''
                             <div style="color:green; text-align: center"><b>TRACK</b></div>
