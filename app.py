@@ -40,17 +40,15 @@ app_ui = ui.page_fillable(
     ui.navset_card_tab(
         ui.nav_panel(ui.markdown('''
                             <div style="color:green; text-align: center"><b>SUBMIT</b></div>
-                            '''),
-                ui.card(          
+                            '''),   
                 ui.input_select('who', 'Quem pagou?', ['', 'Teste', 'Bruno', 'Ellen'], width='100%'),
                 ui.input_select('forwhom', 'Para quem foi?', ['', 'Todos', 'Bruno', 'Ellen', 'Manu'], width='100%'),
                 ui.input_select('how', 'Como pagou?', ['', 'Crédito', 'Pix', 'Ifood', 'Débito conta', 'Dinheiro'], width='100%'),
                 ui.input_select('category', 'Categoria', list(categories.keys()), width='100%'),
                 ui.input_select('subcategory', 'Subcategoria', [], width='100%'),
                 ui.input_text('where', 'Onde foi?', placeholder='Local da compra', width='100%'),
-                ui.input_numeric('value', 'Valor Gasto', value='', width='100%'),   
-                max_height='90%'),
-                ui.card(ui.input_action_button('submit', 'Enviar', width='100%', icon='🚀'), max_height='10%'),
+                ui.input_numeric('value', 'Valor Gasto', value='', width='100%'),
+                ui.input_action_button('submit', 'Enviar', width='100%', icon='🚀'),
         ),
         ui.nav_panel(ui.markdown('''
                             <div style="color:green; text-align: center"><b>TRACK</b></div>
