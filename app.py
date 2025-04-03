@@ -49,7 +49,7 @@ app_ui = ui.page_fillable(
                 ui.input_select('subcategory', 'Subcategoria', [], width='100%'),
                 ui.input_text('where', 'Onde foi?', placeholder='Local da compra', width='100%'),
                 ui.input_numeric('value', 'Valor Gasto', value='', width='100%'),
-                ui.input_action_button('submit', 'Enviar', width='100%'),
+                ui.input_action_button('submit', 'Enviar', width='100%', icon='🚀'),
         ),
         ui.nav_panel(ui.markdown('''
                             <div style="color:green; text-align: center"><b>TRACK</b></div>
@@ -58,7 +58,7 @@ app_ui = ui.page_fillable(
                 ui.sidebar('Selecione o ano e mês para visualizar os dados',
                 ui.input_select('year', 'Ano', ['2025', '2026']),
                 ui.input_select('month', 'Mês', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], selected=pd.to_datetime('now').month),
-                ui.input_action_button('update_data', 'Mostrar Dados', width='100%'), 
+                ui.input_action_button('update_data', 'Mostrar Dados', width='100%', icon='💰'), 
                 ),
                 ui.card(
                 ui.output_ui('df_update'),
