@@ -99,7 +99,7 @@ def server(input: Inputs, output: Outputs, session: Session):
         value = input.value()
 
         # condition to check if any input is empty and return a message for a modal warning
-        if who == '' or forwhom == '' or how == '' or category == '' or subcategory == '' or where == '' or value == '':
+        if who == '' or forwhom == '' or how == '' or category == '' or subcategory == '' or where == '' or value == None:
             m = ui.modal('', 'Preencha todos os campos para enviar!')
             ui.modal_show(m)
         else:
