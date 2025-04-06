@@ -66,6 +66,10 @@ app_ui = ui.page_fillable(
                 fillable_mobile=True
                 ),
         ),
+        ui.nav_panel(ui.markdown('''<div style="color:green; text-align: center"><b>TABLE</b></div>'''),
+            ui.input_action_button('update_table', 'Atualizar', width='100%', icon='⚡'), 
+            ui.output_data_frame('df_all'),
+        ),
         ui.nav_panel(ui.markdown('''<div style="color:green; text-align: center"><b>AI</b></div>'''),
             ui.card(ui.card_header("Converse com seus gastos"),
                 ui.chat_ui("chat", placeholder='Digite aqui sua pergunta', width='100%',fillable_mobile=True)
@@ -238,6 +242,13 @@ def server(input: Inputs, output: Outputs, session: Session):
                     .to_html(index=False)
                 )
     
+    @render.data_frame
+    @reactive.event(input.update_table)
+    def df_all():
+        df=pd.DataFrame(client.get_data())
+        return render.DataGrid(df, filters=True, width='100%', height='100%')
+
+
      # Define the chat
     chat = ui.Chat(id="chat")
 
@@ -245,7 +256,6 @@ def server(input: Inputs, output: Outputs, session: Session):
     async def _():
         df=pd.DataFrame(client.get_data())
         fintrack_md = df.to_markdown(index=False)
-        print(fintrack_md)
         question = chat.user_input()
         prompt = f"Here is a financial table:\n{fintrack_md}\n\nBased on this, {question}"
         answer = ai_client.chat(prompt)
