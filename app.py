@@ -79,7 +79,7 @@ app_ui = ui.page_fillable(
         )
 
     ),
-    #fillable_mobile=True
+    fillable_mobile=True
 )
 
 def server(input: Inputs, output: Outputs, session: Session):
