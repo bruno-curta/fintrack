@@ -37,7 +37,7 @@ app_ui = ui.page_fillable(
     
     ui.navset_card_tab(
         ui.nav_panel(ui.markdown('''
-                            <div style="color:green; text-align: center"><b>SUBMIT</b></div>
+                            <div style="color:green; text-align: center"><b>🚀</b></div>
                             '''),   
                 ui.input_select('who', 'Quem pagou?', ['', 'Teste', 'Bruno', 'Ellen'], width='100%'),
                 ui.input_select('forwhom', 'Para quem foi?', ['', 'Todos', 'Bruno', 'Ellen', 'Manu'], width='100%'),
@@ -49,7 +49,7 @@ app_ui = ui.page_fillable(
                 ui.input_action_button('submit', 'Enviar', width='100%', icon='🚀'),
         ),
         ui.nav_panel(ui.markdown('''
-                            <div style="color:green; text-align: center"><b>TRACK</b></div>
+                            <div style="color:green; text-align: center"><b>🚥</b></div>
                             '''),
             ui.page_sidebar(
                 ui.sidebar('Selecione o ano e mês para visualizar os dados',
@@ -64,15 +64,15 @@ app_ui = ui.page_fillable(
                 fillable_mobile=True
                 ),
         ),
-        ui.nav_panel(ui.markdown('''<div style="color:green; text-align: center"><b>TABLE</b></div>'''),
-            ui.input_action_button('update_table', 'Atualizar', width='100%', icon='⚡'), 
-            ui.output_data_frame('df_all'),
-        ),
-        ui.nav_panel(ui.markdown('''<div style="color:green; text-align: center"><b>CHART</b></div>'''),
+        ui.nav_panel(ui.markdown('''<div style="color:green; text-align: center"><b>📈</b></div>'''),
             ui.input_select('cat', 'Categoria', choices=all_cat, width='100%', selected='Total'),
             ui.output_plot('plot', width='100%', height='100%'),
         ),
-        ui.nav_panel(ui.markdown('''<div style="color:green; text-align: center"><b>AI</b></div>'''),
+        ui.nav_panel(ui.markdown('''<div style="color:green; text-align: center"><b>𝄜</b></div>'''),
+            ui.input_action_button('update_table', 'Atualizar', width='100%', icon='⚡'), 
+            ui.card(ui.output_data_frame('df_all'), full_screen=True, max_height='100%'),
+        ),
+        ui.nav_panel(ui.markdown('''<div style="color:green; text-align: center"><b>🐋</b></div>'''),
             ui.card(ui.card_header("Converse com seus gastos"),
                 ui.chat_ui("chat", placeholder='Digite aqui sua pergunta', width='100%',fillable_mobile=True)
             )
