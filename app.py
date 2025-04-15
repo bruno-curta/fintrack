@@ -3,8 +3,6 @@
 
 from shiny import App, Inputs, Outputs, Session, ui, render, reactive
 
-from pymongo.mongo_client import MongoClient
-from pymongo.server_api import ServerApi
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -21,7 +19,7 @@ ai_client = ChatCompletion()
 categories = {
     '': [],
     'Alimentação/ Bebidas': ['Alimentação', 'Bebidas', 'Festas', 'Praia', 'Refeição', 'Saídas'],
-    'Carro': ['Combustível', 'Estacionamento'],
+    'Carro': ['Combustível', 'Estacionamento', 'Taxi'],
     'Casa': ['Água', 'Assinaturas', 'Internet', 'Jardinagem', 'Khronos', 'Limpeza', 'Luz', 'Manutenção Casa'],
     'Farmácia': ['Higiene & Beleza'],
     'Lazer': ['Passeios'],
@@ -39,7 +37,7 @@ app_ui = ui.page_fillable(
         ui.nav_panel(ui.markdown('''
                             <div style="color:green; text-align: center"><b>🚀</b></div>
                             '''),   
-                ui.input_select('who', 'Quem pagou?', ['', 'Teste', 'Bruno', 'Ellen'], width='100%'),
+                ui.input_select('who', 'Quem pagou?', ['', 'Bruno', 'Ellen'], width='100%'),
                 ui.input_select('forwhom', 'Para quem foi?', ['', 'Todos', 'Bruno', 'Ellen', 'Manu'], width='100%'),
                 ui.input_select('how', 'Como pagou?', ['', 'Crédito', 'Pix', 'Ifood', 'Débito conta', 'Dinheiro'], width='100%'),
                 ui.input_select('category', 'Categoria', list(categories.keys()), width='100%'),
